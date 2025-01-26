@@ -52,6 +52,14 @@ class BookSchema(BaseModel):
     price: int
     account_type: Optional[str] = "User"
 
+class UpdateBookSchema(BaseModel):
+    name: str
+    author: str
+    year: int
+    price: int
+    account_type: Optional[str] = "User"
+
+
 
 
 books = []
@@ -89,6 +97,22 @@ async def get_all_books():
 
 
 
+# update a book
+
+@app.patch("/book/{book_id}")
+async def update_book(book_id:int, book_update_data: UpdateBookSchema):
+    for book in books:
+        if book['id'] == book_id:
+            book['name']= book_update_data.name
+            book['author']= book_update_data.author
+            book['year']= book_update_data.year
+            book['price']= book_update_data.price
+            book['account_type']= book_update_data.account_type
+
+            return book
+
+        else:
+            return {"Book not found"}
 
 
 # delete a book
