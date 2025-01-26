@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from typing import Optional
+from typing import List, Optional
 
 app = FastAPI()
 '''
@@ -49,10 +49,14 @@ class BookSchema(BaseModel):
     name: str
     author: str
     year: int
-    price: int 
+    price: int
+    account_type: Optional[str] = "User"
+
+
 
 books = []
 
+# create book
 @app.post('/book')
 async def create_book(book_data: BookSchema):
     new_book={
@@ -60,12 +64,14 @@ async def create_book(book_data: BookSchema):
         "name": book_data.name,
         "author": book_data.author,
         "year": book_data.year,
-        "price": book_data.price
+        "price": book_data.price,
+        "account_type": book_data.account_type
     }
 
     books.append(new_book)
     return {f"new book created: {new_book}"}
 
+# get book by id
 @app.get('/book')
 async def get_book(book_id:int):
     for book in books:
@@ -74,6 +80,18 @@ async def get_book(book_id:int):
         else:
             return {"error"}
 
+
+# get all books
+
+@app.get("/books")
+async def get_all_books():
+    return books
+
+
+
+
+
+# delete a book
 
 
 
